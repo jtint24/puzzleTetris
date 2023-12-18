@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 import java.util.Objects;
 
 public class Main implements Runnable {
+    public static int tileHeight = 50;
     static Canvas gameCanvas;
     static Game game;
     public static void main(String[] args) {

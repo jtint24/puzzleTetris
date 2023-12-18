@@ -1,11 +1,9 @@
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Locale;
 
 public class Grid implements Renderable {
     Tile[][] tiles;
-    int tileHeight = 75;
 
     public Grid(int width, int height) {
         tiles = new Tile[width][height];
@@ -23,12 +21,12 @@ public class Grid implements Renderable {
             for (int j = 0; j<tiles[0].length; j++) {
                 Tile searchedTile = tiles[i][j];
 
-                if (searchedTile == null || (matchedTiles.size() > 0 && searchedTile.type != matchedTiles.get(0).type)) {
+                if (searchedTile == null || !tileIsResting(i,j) || (matchedTiles.size() > 0 && searchedTile.type != matchedTiles.get(0).type)) {
                     scoreSum += removeLines(i, startJ, i+1, j, matchedTiles);
                     startJ = j;
                     matchedTiles = new ArrayList<>();
                 }
-                if (searchedTile != null) {
+                if (searchedTile != null && tileIsResting(i,j)) {
                     matchedTiles.add(searchedTile);
                 }
             }
@@ -45,13 +43,13 @@ public class Grid implements Renderable {
             for (int i = 0; i<tiles.length; i++) {
                 Tile searchedTile = tiles[i][j];
 
-                if (searchedTile == null || (matchedTiles.size() > 0 && searchedTile.type != matchedTiles.get(0).type)) {
+                if (searchedTile == null || !tileIsResting(i,j) || (matchedTiles.size() > 0 && searchedTile.type != matchedTiles.get(0).type)) {
                     scoreSum += removeLines(startI, j, i, j+1, matchedTiles);
                     startI = i;
                     matchedTiles = new ArrayList<>();
                 }
 
-                if (searchedTile != null) {
+                if (searchedTile != null && tileIsResting(i,j)) {
                     matchedTiles.add(searchedTile);
                 }
             }
@@ -146,7 +144,7 @@ public class Grid implements Renderable {
 
                     searchedTile.offsetY += 15;
 
-                    if (searchedTile.offsetY >= tileHeight) {
+                    if (searchedTile.offsetY >= Main.tileHeight) {
                         tiles[i][j + 1] = searchedTile;
                         tiles[i][j] = null;
                         searchedTile.offsetY = 0;
@@ -196,7 +194,7 @@ public class Grid implements Renderable {
                     // name = "greenTileSmall";
                     Image tileImage = searchedTile.getImage();
 
-                    RenderedImage renderedImage = new RenderedImage(tileImage, 75 * i + searchedTile.offsetX, 75 * j + searchedTile.offsetY);
+                    RenderedImage renderedImage = new RenderedImage(tileImage, Main.tileHeight * i + searchedTile.offsetX, Main.tileHeight * j + searchedTile.offsetY);
                     c.imagesToRender.push(renderedImage);
                 }
 

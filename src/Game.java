@@ -3,19 +3,19 @@ import java.awt.event.KeyEvent;
 
 public class Game implements Renderable {
     Grid grid;
-
     Piece activePiece;
+    int dropSpeed = 5;
 
     Game() {
-        grid = new Grid(6, 10);
+        grid = new Grid(10, 15);
         Tile.TileType[] values = Tile.TileType.values();
-        for (int i = 0; i<6; i++) {
+        /* for (int i = 0; i<6; i++) {
             for (int j = 5; j<10; j++) {
                 Tile.TileType value = values[Math.min(i%6, j%6)];
                 grid.tiles[i][j] = new Tile(value);
             }
         }
-        grid.tiles[2][4] = new Tile(Tile.TileType.ORANGE);
+        grid.tiles[2][4] = new Tile(Tile.TileType.ORANGE);*/
 
         activePiece = Piece.getRandomPiece();
         activePiece.headX = 3;
@@ -31,22 +31,22 @@ public class Game implements Renderable {
     public void movePiece() {
         // System.out.println(pieceConflicts());
         if (Application.keyData.getIsTyped(KeyEvent.VK_LEFT)) {
-            System.out.println("Left!");
+            // System.out.println("Left!");
 
             activePiece.headX--;
             if (pieceConflicts()) {
                 activePiece.headX++;
             }
         } else if (Application.keyData.getIsTyped(KeyEvent.VK_RIGHT)) {
-            System.out.println("Right!");
+            // System.out.println("Right!");
             activePiece.headX++;
             if (pieceConflicts()) {
                 activePiece.headX--;
             }
         }
-        if (Application.frameCount % 10 == 0) {
+        //if (Application.frameCount % 10 == 0) {
             dropPiece();
-        }
+        //}
         if (pieceConflicts()) {
             raisePiece();
             copyPieceToGrid();
@@ -55,15 +55,34 @@ public class Game implements Renderable {
     }
 
     private void raisePiece() {
-        activePiece.headY--;
+        for (int i = 0; i<4; i++) {
+            activePiece.tiles[i].offsetY -= dropSpeed;
+        }
+        if (activePiece.tiles[0].offsetY < -Main.tileHeight) {
+            activePiece.headY--;
+
+            for (int i = 0; i<4; i++) {
+                activePiece.tiles[i].offsetY = 0;
+            }
+        }
     }
 
     private void dropPiece() {
-        activePiece.headY++;
+        for (int i = 0; i<4; i++) {
+            activePiece.tiles[i].offsetY += dropSpeed;
+        }
+        if (activePiece.tiles[0].offsetY >= 0) {
+            activePiece.headY++;
+
+            for (int i = 0; i<4; i++) {
+                activePiece.tiles[i].offsetY = -Main.tileHeight;
+            }
+        }
     }
 
     public void getNewPiece() {
         activePiece = Piece.getRandomPiece();
+        activePiece.headX = 6;
         // activePiece = null;
     }
 
