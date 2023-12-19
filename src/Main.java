@@ -39,14 +39,12 @@ public class Main implements Runnable {
             @Override
             public void keyPressed(KeyEvent e) {
                 int key = e.getExtendedKeyCode();
-                System.out.println(key);
                 Application.keyData.setPressed(key);
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
                 int key = e.getExtendedKeyCode();
-                System.out.println(key);
                 Application.keyData.setReleased(key);
             }
         });

@@ -32,8 +32,8 @@ public class Tile {
     }
 
     public enum TileType {
-        RED(RED_BACKGROUND+"#"+RESET),
-        PINK(PURPLE_BACKGROUND+"#"+RESET),
+        // RED(RED_BACKGROUND+"#"+RESET),
+        // PINK(PURPLE_BACKGROUND+"#"+RESET),
         ORANGE(WHITE_BACKGROUND+"#"+RESET),
         YELLOW(YELLOW_BACKGROUND+"#"+RESET),
         GREEN(GREEN_BACKGROUND+"#"+RESET),

@@ -44,6 +44,9 @@ public class Application extends JFrame {
             if (!typeData.containsKey(key)) {
                 return false;
             }
+            if (typeData == null) {
+                return false;
+            }
             return typeData.get(key);
         }
     }

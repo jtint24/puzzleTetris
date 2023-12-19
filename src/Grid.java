@@ -4,6 +4,7 @@ import java.util.Collections;
 
 public class Grid implements Renderable {
     Tile[][] tiles;
+    ArrayList<LineClear> lineClears = new ArrayList<>();
 
     public Grid(int width, int height) {
         tiles = new Tile[width][height];
@@ -22,7 +23,7 @@ public class Grid implements Renderable {
                 Tile searchedTile = tiles[i][j];
 
                 if (searchedTile == null || !tileIsResting(i,j) || (matchedTiles.size() > 0 && searchedTile.type != matchedTiles.get(0).type)) {
-                    scoreSum += removeLines(i, startJ, i+1, j, matchedTiles);
+                    scoreSum += removeLine(i, startJ, i+1, j, matchedTiles);
                     startJ = j;
                     matchedTiles = new ArrayList<>();
                 }
@@ -31,7 +32,7 @@ public class Grid implements Renderable {
                 }
             }
 
-            scoreSum += removeLines(i, startJ, i+1, tiles[0].length, matchedTiles);
+            scoreSum += removeLine(i, startJ, i+1, tiles[0].length, matchedTiles);
         }
 
         // Identify horizontal lines
@@ -44,7 +45,7 @@ public class Grid implements Renderable {
                 Tile searchedTile = tiles[i][j];
 
                 if (searchedTile == null || !tileIsResting(i,j) || (matchedTiles.size() > 0 && searchedTile.type != matchedTiles.get(0).type)) {
-                    scoreSum += removeLines(startI, j, i, j+1, matchedTiles);
+                    scoreSum += removeLine(startI, j, i, j+1, matchedTiles);
                     startI = i;
                     matchedTiles = new ArrayList<>();
                 }
@@ -54,7 +55,7 @@ public class Grid implements Renderable {
                 }
             }
 
-            scoreSum += removeLines(startI, j, tiles.length, j+1, matchedTiles);
+            scoreSum += removeLine(startI, j, tiles.length, j+1, matchedTiles);
         }
 
         // Remove tiles in lines
@@ -74,15 +75,9 @@ public class Grid implements Renderable {
         return scoreSum;
     }
 
-    private int removeLines(int startI, int startJ, int endI, int endJ, ArrayList<Tile> matchedTiles) {
+    private int removeLine(int startI, int startJ, int endI, int endJ, ArrayList<Tile> matchedTiles) {
         if (matchedTiles.size() < 3) {
             return 0;
-        }
-
-        for (int i = startI; i<endI; i++) {
-            for (int j = startJ; j<endJ; j++) {
-                // tiles[i][j] = null;
-            }
         }
 
         int maxMultiplier = 1;
@@ -92,7 +87,11 @@ public class Grid implements Renderable {
             maxMultiplier = Math.max(maxMultiplier, tile.multiplier);
         }
 
-        return getScoreForClear(matchedTiles.size(), maxMultiplier);
+        int score = getScoreForClear(matchedTiles.size(), maxMultiplier);
+
+        lineClears.add(new LineClear(score, maxMultiplier, matchedTiles.get(0).type, startI*Main.tileHeight, startJ*Main.tileHeight));
+
+        return score;
     }
 
     public int getScoreForClear(int tiles, int multiplier) {
@@ -103,6 +102,10 @@ public class Grid implements Renderable {
         dropTiles();
         int scoreBonus = removeLines();
         resetMultipliers();
+
+        for (LineClear lineClear : lineClears) {
+            lineClear.runFrame();
+        }
 
         // Return the score bonus
         return scoreBonus;
@@ -183,6 +186,15 @@ public class Grid implements Renderable {
         }
     }
 
+    public boolean isFull() {
+        for (int i = 0; i<tiles.length; i++) {
+            if (tiles[i][0] != null && tileIsResting(i, 0)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public void render(Canvas c) {
 
@@ -199,6 +211,10 @@ public class Grid implements Renderable {
                 }
 
             }
+        }
+
+        for (LineClear lineClear : lineClears) {
+            lineClear.render(c);
         }
     }
 }
