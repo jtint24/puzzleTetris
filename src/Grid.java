@@ -10,7 +10,7 @@ public class Grid implements Renderable {
         tiles = new Tile[width][height];
     }
 
-    public int removeLines() {
+    public void removeLines() {
         int scoreSum = 0;
 
         // Identify vertical lines
@@ -72,7 +72,7 @@ public class Grid implements Renderable {
         }
 
         // Return combined score
-        return scoreSum;
+        // return scoreSum;
     }
 
     private int removeLine(int startI, int startJ, int endI, int endJ, ArrayList<Tile> matchedTiles) {
@@ -95,25 +95,14 @@ public class Grid implements Renderable {
     }
 
     public int getScoreForClear(int tiles, int multiplier) {
-        return tiles * 100 * multiplier;
+        return tiles * 30 * multiplier;
     }
 
     public int runFrame() {
         dropTiles();
-        int scoreBonus = removeLines();
+        removeLines();
         resetMultipliers();
-
-        ArrayList<LineClear> lineClearsToRemove = new ArrayList<>();
-        for (LineClear lineClear : lineClears) {
-            lineClear.runFrame();
-            if (lineClear.x == 0 && lineClear.y == 0) {
-                lineClearsToRemove.add(lineClear);
-            }
-        }
-
-        for (LineClear lineClear : lineClearsToRemove) {
-            lineClears.remove(lineClear);
-        }
+        int scoreBonus = runLineClears();
 
         // Return the score bonus
         return scoreBonus;
@@ -196,7 +185,9 @@ public class Grid implements Renderable {
 
     public boolean isFull() {
         for (int i = 0; i<tiles.length; i++) {
-            if (tiles[i][0] != null && tileIsResting(i, 0)) {
+            //if (tiles[i][0] != null && tileIsResting(i, 0)) {
+            if (tiles[i][0] != null || tiles[i][2] != null) {
+                // System.out.println("Board is full!");
                 return true;
             }
         }
@@ -224,5 +215,23 @@ public class Grid implements Renderable {
         for (LineClear lineClear : lineClears) {
             lineClear.render(c);
         }
+    }
+
+    public int runLineClears() {
+        ArrayList<LineClear> lineClearsToRemove = new ArrayList<>();
+        for (LineClear lineClear : lineClears) {
+            lineClear.runFrame();
+            if (lineClear.atDestination()) {
+                lineClearsToRemove.add(lineClear);
+            }
+        }
+        int scoreBonus = 0;
+
+        for (LineClear lineClear : lineClearsToRemove) {
+            lineClears.remove(lineClear);
+            scoreBonus += lineClear.scoreBonus;
+        }
+
+        return scoreBonus;
     }
 }

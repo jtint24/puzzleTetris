@@ -4,6 +4,8 @@ public class LineClear implements Renderable {
     Tile.TileType type;
     int x;
     int y;
+    int scoreBoxX = 500;
+    int scoreBoxY = 100;
     LineClear(int scoreBonus, int multiplier, Tile.TileType type, int x, int y) {
         this.scoreBonus = scoreBonus;
         this.multiplier = multiplier;
@@ -13,8 +15,12 @@ public class LineClear implements Renderable {
     }
 
     public void runFrame() {
-        x *= 0.95;
-        y *= 0.85;
+        x = (int) ((x-scoreBoxX)*0.95+scoreBoxX);
+        y = (int) ((y-scoreBoxY)*0.85+scoreBoxY);
+    }
+
+    public boolean atDestination() {
+        return (int) ((y-scoreBoxY)*0.85+scoreBoxY) == y;
     }
 
     @Override

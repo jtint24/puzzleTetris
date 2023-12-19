@@ -4,9 +4,9 @@ import java.awt.event.KeyEvent;
 public class Game implements Renderable {
     Grid grid;
     Piece activePiece;
-    int dropSpeed = 5;
-
     int score = 0;
+    GameState state = GameState.PLAY;
+    int stateChangeFrame = 0;
 
     Game() {
         grid = new Grid(10, 15);
@@ -19,17 +19,40 @@ public class Game implements Renderable {
         }
         grid.tiles[2][4] = new Tile(Tile.TileType.ORANGE);*/
 
-        activePiece = Piece.getRandomPiece();
-        activePiece.headX = 3;
-        activePiece.headY = 3;
+        getNewPiece();
+
     }
 
     public void runFrame() {
-        int scoreBonus = grid.runFrame();
+        int lineCount = grid.lineClears.size();
+        int scoreBonus;
+
+        if (state == GameState.PLAY) {
+            scoreBonus = grid.runFrame();
+        } else if (grid.isFull()) {
+            scoreBonus = grid.runLineClears();
+            state = GameState.LOST;
+        } else {
+            scoreBonus = grid.runLineClears();
+        }
+
         score += scoreBonus;
-        score += 2;
-        System.out.println(score);
-        movePiece();
+
+        if (lineCount < grid.lineClears.size() && state == GameState.PLAY) {
+            state = GameState.PAUSE;
+            stateChangeFrame = Application.frameCount;
+        }
+
+        System.out.println(stateChangeFrame+" "+Application.frameCount);
+        System.out.println(state);
+        if (stateChangeFrame+10 < Application.frameCount && state == GameState.PAUSE) {
+            state = GameState.PLAY;
+        }
+
+        // score += 2;
+        if (state == GameState.PLAY) {
+            movePiece();
+        }
     }
 
     public void movePiece() {
@@ -49,8 +72,9 @@ public class Game implements Renderable {
             }
         }
         if (Application.keyData.getIsPressed(KeyEvent.VK_SPACE)) {
-            dropPiece(10);
+            dropPiece(10, true);
             if (pieceConflicts()) {
+
                 raisePiece(10);
             }
         }
@@ -67,7 +91,7 @@ public class Game implements Renderable {
             }
         }
         //if (Application.frameCount % 10 == 0) {
-            dropPiece(5);
+            dropPiece(5, false);
         //}
         if (pieceConflicts()) {
             raisePiece(5);
@@ -89,12 +113,15 @@ public class Game implements Renderable {
         }
     }
 
-    private void dropPiece(int diff) {
+    private void dropPiece(int diff, boolean forceDropped) {
         for (int i = 0; i<4; i++) {
             activePiece.tiles[i].offsetY += diff;
         }
         if (activePiece.tiles[0].offsetY >= 0) {
             activePiece.headY++;
+            if (forceDropped) {
+                score += 1;
+            }
 
             for (int i = 0; i<4; i++) {
                 activePiece.tiles[i].offsetY -= Main.tileHeight;
@@ -105,6 +132,7 @@ public class Game implements Renderable {
     public void getNewPiece() {
         activePiece = Piece.getRandomPiece();
         activePiece.headX = 6;
+
         // activePiece = null;
     }
 
@@ -148,5 +176,9 @@ public class Game implements Renderable {
         if (activePiece != null) {
             activePiece.render(c);
         }
+
+        // Score UI
+
+        c.textToRender.push(new RenderedText(""+score, 500, 100));
     }
 }
