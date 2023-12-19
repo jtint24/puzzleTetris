@@ -11,6 +11,7 @@ public class Main implements Runnable {
     public static void main(String[] args) {
 
         ImageFetcher.initializeImages();
+        FontFetcher.initializeFonts();
         gameCanvas = new Canvas();
 
         JFrame frame = createFrame();

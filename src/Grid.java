@@ -103,8 +103,16 @@ public class Grid implements Renderable {
         int scoreBonus = removeLines();
         resetMultipliers();
 
+        ArrayList<LineClear> lineClearsToRemove = new ArrayList<>();
         for (LineClear lineClear : lineClears) {
             lineClear.runFrame();
+            if (lineClear.x == 0 && lineClear.y == 0) {
+                lineClearsToRemove.add(lineClear);
+            }
+        }
+
+        for (LineClear lineClear : lineClearsToRemove) {
+            lineClears.remove(lineClear);
         }
 
         // Return the score bonus
