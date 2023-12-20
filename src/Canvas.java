@@ -25,9 +25,10 @@ public class Canvas extends JPanel {
         }
 
         Stack<RenderedText> textToRenderCopy = (Stack<RenderedText>) textToRender.clone();
-        g.setFont(FontFetcher.getFont("jost-italic.ttf", 40, TextAttribute.WEIGHT_BOLD));
+        g.setFont(FontFetcher.getFont("jost-italic.ttf", 40, TextAttribute.WEIGHT_BOLD, Color.BLACK));
 
         for (RenderedText text : textToRenderCopy) {
+            g.setFont(FontFetcher.getFont("jost-italic.ttf", 40, TextAttribute.WEIGHT_BOLD, text.color));
             g.drawString(text.label, text.x, text.y);
         }
     }

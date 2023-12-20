@@ -26,7 +26,7 @@ public class LineClear implements Renderable {
     @Override
     public void render(Canvas c) {
         c.textToRender.push(
-                new RenderedText(""+scoreBonus, x, y)
+                new RenderedText(""+scoreBonus, x, y, type.color)
         );
     }
 }

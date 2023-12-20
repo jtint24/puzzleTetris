@@ -32,17 +32,19 @@ public class Tile {
     }
 
     public enum TileType {
-        // RED(RED_BACKGROUND+"#"+RESET),
-        // PINK(PURPLE_BACKGROUND+"#"+RESET),
-        ORANGE(WHITE_BACKGROUND+"#"+RESET),
-        YELLOW(YELLOW_BACKGROUND+"#"+RESET),
-        GREEN(GREEN_BACKGROUND+"#"+RESET),
-        BLUE(BLUE_BACKGROUND+"#"+RESET);
+        RED(RED_BACKGROUND+"#"+RESET, new Color(246, 13, 90)),
+        PINK(PURPLE_BACKGROUND+"#"+RESET, new Color(236, 74, 242)),
+        ORANGE(WHITE_BACKGROUND+"#"+RESET, new Color(228, 120, 40)),
+        YELLOW(YELLOW_BACKGROUND+"#"+RESET, new Color(255, 240, 11)),
+        GREEN(GREEN_BACKGROUND+"#"+RESET, new Color(51, 228, 46)),
+        BLUE(BLUE_BACKGROUND+"#"+RESET, new Color(45, 137, 251));
 
         String symbol;
+        Color color;
 
-        TileType(String s) {
+        TileType(String s, Color c) {
             symbol = s;
+            color = c;
         }
     }
 }

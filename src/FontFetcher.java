@@ -26,13 +26,15 @@ public class FontFetcher {
         }
     }
 
-    public static Font getFont(String name, int size, float weight) {
+    public static Font getFont(String name, int size, float weight, Color color) {
         Font base = getFont(name);
 
         HashMap<TextAttribute, Object> attributes = new HashMap<>();
 
         attributes.put(TextAttribute.WEIGHT, weight);
         attributes.put(TextAttribute.SIZE, (float) size);
+        attributes.put(TextAttribute.FOREGROUND, color);
+        // attributes.put(TextAttribute.OU)
 
         return base.deriveFont(attributes);
     }

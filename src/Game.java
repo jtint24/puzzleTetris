@@ -45,7 +45,7 @@ public class Game implements Renderable {
 
         System.out.println(stateChangeFrame+" "+Application.frameCount);
         System.out.println(state);
-        if (stateChangeFrame+10 < Application.frameCount && state == GameState.PAUSE) {
+        if (stateChangeFrame+5 < Application.frameCount && state == GameState.PAUSE) {
             state = GameState.PLAY;
         }
 
@@ -91,7 +91,7 @@ public class Game implements Renderable {
             }
         }
         //if (Application.frameCount % 10 == 0) {
-            dropPiece(5, false);
+        dropPiece(5, false);
         //}
         if (pieceConflicts()) {
             raisePiece(5);
