@@ -24,6 +24,10 @@ public class Game implements Renderable {
     }
 
     public void runFrame() {
+        if (activePiece == null) {
+            getNewPiece();
+        }
+
         int lineCount = grid.lineClears.size();
         int scoreBonus;
 
@@ -96,7 +100,8 @@ public class Game implements Renderable {
         if (pieceConflicts()) {
             raisePiece(5);
             copyPieceToGrid();
-            getNewPiece();
+            activePiece = null;
+            // getNewPiece();
         }
     }
 
@@ -130,11 +135,20 @@ public class Game implements Renderable {
     }
 
     public void getNewPiece() {
+
         activePiece = Piece.getRandomPiece();
         activePiece.headX = 6;
 
+        if (piecePermanentlyConflicts()) {
+            state = GameState.LOST;
+        } else if (pieceConflicts()) {
+            activePiece = null;
+        }
+
         // activePiece = null;
     }
+
+
 
     public void copyPieceToGrid() {
         for (int i = 0; i<4; i++) {
@@ -145,6 +159,27 @@ public class Game implements Renderable {
 
             grid.tiles[location.x+activePiece.headX][location.y+activePiece.headY] = tile;
         }
+    }
+
+    private boolean piecePermanentlyConflicts() {
+        if (activePiece == null) {
+            return true;
+        }
+        for (int i = 0; i<4; i++) {
+            Point location = activePiece.locations[i];
+            int x = location.x+activePiece.headX;
+            int y = location.y+activePiece.headY;
+            if (0>x || x>=grid.tiles.length || 0>y || y>=grid.tiles[0].length) {
+                // System.out.println(x+","+y);
+                return true;
+                // continue;
+            }
+            if (grid.tiles[x][y] != null && grid.tileIsResting(x, y)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public boolean pieceConflicts() {

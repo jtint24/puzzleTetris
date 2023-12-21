@@ -186,7 +186,7 @@ public class Grid implements Renderable {
     public boolean isFull() {
         for (int i = 0; i<tiles.length; i++) {
             //if (tiles[i][0] != null && tileIsResting(i, 0)) {
-            if (tiles[i][0] != null || tiles[i][2] != null) {
+            if (tiles[i][2] != null && tileIsResting(i,2)) {
                 // System.out.println("Board is full!");
                 return true;
             }

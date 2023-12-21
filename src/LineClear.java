@@ -20,7 +20,7 @@ public class LineClear implements Renderable {
     }
 
     public boolean atDestination() {
-        return (int) ((y-scoreBoxY)*0.85+scoreBoxY) == y;
+        return (int) ((y-scoreBoxY)*0.85+scoreBoxY) == y && (int) ((x-scoreBoxX)*0.85+scoreBoxX) - x < 4;
     }
 
     @Override
