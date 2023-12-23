@@ -136,8 +136,8 @@ public class Piece implements Renderable {
 
             RenderedImage renderedImage = new RenderedImage(
                     tile.getImage(),
-                    (location.x+headX)*Main.tileHeight + tile.offsetX,
-                    (location.y+headY)*Main.tileHeight + tile.offsetY
+                    (location.x+headX)*Main.tileHeight + tile.offsetX + Main.tileOffsetX,
+                    (location.y+headY)*Main.tileHeight + tile.offsetY + Main.tileOffsetY
             );
 
             c.imagesToRender.push(renderedImage);

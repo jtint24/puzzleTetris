@@ -205,7 +205,7 @@ public class Grid implements Renderable {
                     // name = "greenTileSmall";
                     Image tileImage = searchedTile.getImage();
 
-                    RenderedImage renderedImage = new RenderedImage(tileImage, Main.tileHeight * i + searchedTile.offsetX, Main.tileHeight * j + searchedTile.offsetY);
+                    RenderedImage renderedImage = new RenderedImage(tileImage, Main.tileHeight * i + searchedTile.offsetX+Main.tileOffsetX, Main.tileHeight * j + searchedTile.offsetY+Main.tileOffsetY);
                     c.imagesToRender.push(renderedImage);
                 }
 

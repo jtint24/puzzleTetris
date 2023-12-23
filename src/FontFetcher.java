@@ -10,7 +10,8 @@ public class FontFetcher {
     public static HashMap<String, Font> fonts = new HashMap<>();
 
     public static String[] fontNames = {
-            "jost-italic.ttf"
+            "jost-italic.ttf",
+            "jost.ttf"
     };
 
     public static void initializeFonts() {

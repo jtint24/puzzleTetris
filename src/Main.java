@@ -6,6 +6,8 @@ import java.util.Objects;
 
 public class Main implements Runnable {
     public static int tileHeight = 50;
+    public static int tileOffsetX = 50;
+    public static int tileOffsetY = 37;
     static Canvas gameCanvas;
     static Game game;
     public static void main(String[] args) {
@@ -29,7 +31,7 @@ public class Main implements Runnable {
         Application frame = new Application("puzzle tetris");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        frame.setSize(new Dimension(600, 800));
+        frame.setSize(new Dimension(1000, 850));
         frame.setResizable(false);
         frame.addKeyListener(new KeyListener() {
             @Override

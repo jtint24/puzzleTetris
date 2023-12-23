@@ -1,5 +1,9 @@
 import javax.swing.*;
 import java.awt.event.KeyEvent;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class Game implements Renderable {
     Grid grid;
@@ -7,6 +11,7 @@ public class Game implements Renderable {
     int score = 0;
     GameState state = GameState.PLAY;
     int stateChangeFrame = 0;
+    long startTime = System.currentTimeMillis();
 
     Game() {
         grid = new Grid(10, 15);
@@ -222,7 +227,21 @@ public class Game implements Renderable {
         }
 
         // Score UI
+        String scoreString = String.format("%010d", score);
+        c.textToRender.push(new RenderedText(scoreString, Main.tileOffsetX+10*Main.tileHeight+100+10+10, Main.tileOffsetY+Main.tileOffsetY+5));
 
-        c.textToRender.push(new RenderedText(""+score, 500, 100));
+        // Time UI
+
+        long millisElapsed = (System.currentTimeMillis()+3600000-10000-startTime);
+        int milliseconds = (int) (millisElapsed % 1000);
+        int seconds = (int) ((millisElapsed % 60000) / 1000);
+        int minutes = (int) ((millisElapsed % 3600000)) / 60000;
+        int hours = (int) ((millisElapsed % 360000000)) / 3600000 % 10;
+
+        String timeString = String.format("%d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
+
+        c.textToRender.push(new RenderedText(timeString, Main.tileOffsetX+10*Main.tileHeight+100+10+20, Main.tileOffsetY+Main.tileOffsetY*5+5));
+
+
     }
 }

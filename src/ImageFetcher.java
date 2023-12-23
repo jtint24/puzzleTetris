@@ -26,7 +26,8 @@ public class ImageFetcher {
             "greenTileSketchSmall",
             "blueTileSketchSmall",
             "splotchSmall",
-            "splotchSmall"
+            "splotchSmall",
+            "splotchDot"
     };
 
     public static Image getImage(String s) {
