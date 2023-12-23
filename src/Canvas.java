@@ -15,8 +15,25 @@ public class Canvas extends JPanel {
         this.setBackground(new Color(255, 255, 255));
     }
 
+
+    public Graphics paintBackground(Graphics g) {
+        int offset = Application.frameCount/2 % 100;
+        for (int i = 0; i<20; i++) {
+            for (int j = 0; j<20; j++) {
+                if ((i+j) % 2 == 0) {
+                    g.drawImage(ImageFetcher.getImage("splotchSmall"), offset+i*100, offset+j*100, null);
+                }
+            }
+        }
+
+        ((Graphics2D)g).setPaint(new Color(0xEEFFFFFF, true));
+        g.fillRoundRect(0,0,10*Main.tileHeight, 15*Main.tileHeight, 50,50);
+
+        return g;
+    }
     @Override
     public void paintComponent(Graphics g) {
+
 
         Stack<RenderedImage> imagesToRenderCopy = (Stack<RenderedImage>) imagesToRender.clone();
         // System.out.println(imagesToRenderCopy.size());

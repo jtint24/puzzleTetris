@@ -36,8 +36,12 @@ public class Game implements Renderable {
         } else if (grid.isFull()) {
             scoreBonus = grid.runLineClears();
             state = GameState.LOST;
-        } else {
+        } else if (state == GameState.LOST) {
+            scoreBonus = grid.runLossFrame();
+        } else if (state == GameState.PAUSE) {
             scoreBonus = grid.runLineClears();
+        } else {
+            scoreBonus = 0;
         }
 
         score += scoreBonus;
@@ -60,6 +64,9 @@ public class Game implements Renderable {
     }
 
     public void movePiece() {
+        if (activePiece == null) {
+            return;
+        }
         // System.out.println(pieceConflicts());
         if (Application.keyData.getIsTyped(KeyEvent.VK_LEFT)) {
             // System.out.println("Left!");
@@ -106,6 +113,9 @@ public class Game implements Renderable {
     }
 
     private void raisePiece(int diff) {
+        if (activePiece == null) {
+            return;
+        }
         for (int i = 0; i<4; i++) {
             activePiece.tiles[i].offsetY -= diff;
         }
@@ -119,6 +129,9 @@ public class Game implements Renderable {
     }
 
     private void dropPiece(int diff, boolean forceDropped) {
+        if (activePiece == null) {
+            return;
+        }
         for (int i = 0; i<4; i++) {
             activePiece.tiles[i].offsetY += diff;
         }
@@ -147,8 +160,6 @@ public class Game implements Renderable {
 
         // activePiece = null;
     }
-
-
 
     public void copyPieceToGrid() {
         for (int i = 0; i<4; i++) {
@@ -202,8 +213,6 @@ public class Game implements Renderable {
 
         return false;
     }
-
-
 
     @Override
     public void render(Canvas c) {

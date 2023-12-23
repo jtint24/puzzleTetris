@@ -234,4 +234,10 @@ public class Grid implements Renderable {
 
         return scoreBonus;
     }
+
+    public int runLossFrame() {
+        int scoreBonus = runLineClears();
+
+        return scoreBonus;
+    }
 }

@@ -27,7 +27,7 @@ public class Tile {
     }
 
     public Image getImage() {
-        String imageName = type.name().toLowerCase(Locale.ROOT)+"tilesmall";
+        String imageName = type.name().toLowerCase(Locale.ROOT)+"TileSketchSmall";
         return ImageFetcher.preparedImage(imageName);
     }
 

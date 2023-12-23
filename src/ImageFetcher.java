@@ -19,6 +19,14 @@ public class ImageFetcher {
             "pinktilesmall",
             "greentilesmall",
             "bluetilesmall",
+            "redTileSketchSmall",
+            "orangeTileSketchSmall",
+            "yellowTileSketchSmall",
+            "pinkTileSketchSmall",
+            "greenTileSketchSmall",
+            "blueTileSketchSmall",
+            "splotchSmall",
+            "splotchSmall"
     };
 
     public static Image getImage(String s) {
@@ -51,6 +59,6 @@ public class ImageFetcher {
 
     public static Image preparedImage(String name) {
         BufferedImage unscaledImage = (BufferedImage) getImage(name);
-        return unscaledImage.getScaledInstance(Main.tileHeight, Main.tileHeight, Image.SCALE_DEFAULT);
+        return unscaledImage.getScaledInstance(Main.tileHeight+2, Main.tileHeight+2, Image.SCALE_DEFAULT);
     }
 }
