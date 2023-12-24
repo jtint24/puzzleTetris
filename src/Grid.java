@@ -6,8 +6,11 @@ public class Grid implements Renderable {
     Tile[][] tiles;
     ArrayList<LineClear> lineClears = new ArrayList<>();
 
+    Point[][] velocities;
+
     public Grid(int width, int height) {
         tiles = new Tile[width][height];
+        velocities = new Point[width][height];
     }
 
     public void removeLines() {
@@ -235,8 +238,42 @@ public class Grid implements Renderable {
         return scoreBonus;
     }
 
+    public boolean existsVisibleTile() {
+        int boardHeight = tiles[0].length;
+        for (int i = 0; i<tiles.length; i++) {
+            for (int j = 0; j<tiles[0].length; j++) {
+                Tile tile = tiles[i][j];
+                if (tile != null) {
+                    if ((boardHeight-j)*Main.tileHeight > Main.tileOffsetY) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
     public int runLossFrame() {
         int scoreBonus = runLineClears();
+
+        // System.out.println("running loss frame");
+
+        for (int i = 0; i<velocities.length; i++) {
+            for (int j = 0; j<velocities[0].length; j++) {
+                if (velocities[i][j] == null) {
+                    velocities[i][j] = new Point(0,0);
+                }
+
+                velocities[i][j].y += 2;
+
+                if (tiles[i][j] != null) {
+                    tiles[i][j].offsetY += velocities[i][j].y;
+                    tiles[i][j].offsetY += Math.abs(5-i);
+                }
+            }
+        }
+
 
         return scoreBonus;
     }

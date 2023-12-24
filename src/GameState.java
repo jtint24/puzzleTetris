@@ -1,6 +1,7 @@
 public enum GameState {
     PLAY,
     PAUSE,
-    LOST;
+    LOST,
+    TRY_AGAIN;
 
 }

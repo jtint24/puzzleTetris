@@ -1,9 +1,4 @@
-import javax.swing.*;
 import java.awt.event.KeyEvent;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 public class Game implements Renderable {
     Grid grid;
@@ -11,7 +6,8 @@ public class Game implements Renderable {
     int score = 0;
     GameState state = GameState.PLAY;
     int stateChangeFrame = 0;
-    long startTime = System.currentTimeMillis();
+    long startTimeMillis = System.currentTimeMillis();
+    long lossTimeMillis = 0;
 
     Game() {
         grid = new Grid(10, 15);
@@ -38,11 +34,18 @@ public class Game implements Renderable {
 
         if (state == GameState.PLAY) {
             scoreBonus = grid.runFrame();
+        }  else if (state == GameState.LOST) {
+            if (lossTimeMillis == 0) {
+                lossTimeMillis = System.currentTimeMillis();
+            }
+            activePiece = null;
+            scoreBonus = grid.runLossFrame();
+            if (!grid.existsVisibleTile() && grid.lineClears.size() == 0) {
+                state = GameState.TRY_AGAIN;
+            }
         } else if (grid.isFull()) {
             scoreBonus = grid.runLineClears();
             state = GameState.LOST;
-        } else if (state == GameState.LOST) {
-            scoreBonus = grid.runLossFrame();
         } else if (state == GameState.PAUSE) {
             scoreBonus = grid.runLineClears();
         } else {
@@ -155,7 +158,19 @@ public class Game implements Renderable {
     public void getNewPiece() {
 
         activePiece = Piece.getRandomPiece();
-        activePiece.headX = 6;
+        activePiece.headX = 5;
+        /*
+        for (int i = 0; i<6; i++) {
+            activePiece.headX = 6-i;
+            if (!pieceConflicts()) {
+                return;
+            }
+            activePiece.headX = 6+i;
+            if (!pieceConflicts())  {
+                return;
+            }
+        }
+        */
 
         if (piecePermanentlyConflicts()) {
             state = GameState.LOST;
@@ -232,13 +247,16 @@ public class Game implements Renderable {
 
         // Time UI
 
-        long millisElapsed = (System.currentTimeMillis()+3600000-10000-startTime);
+        long millisElapsed = System.currentTimeMillis()-startTimeMillis;
+        if (lossTimeMillis >= startTimeMillis) {
+            millisElapsed = lossTimeMillis - startTimeMillis;
+        }
         int milliseconds = (int) (millisElapsed % 1000);
         int seconds = (int) ((millisElapsed % 60000) / 1000);
         int minutes = (int) ((millisElapsed % 3600000)) / 60000;
         int hours = (int) ((millisElapsed % 360000000)) / 3600000 % 10;
 
-        String timeString = String.format("%d:%02d:%02d.%03d", hours, minutes, seconds, milliseconds);
+        String timeString = String.format("%d:%02d'%02d\"%03d", hours, minutes, seconds, milliseconds);
 
         c.textToRender.push(new RenderedText(timeString, Main.tileOffsetX+10*Main.tileHeight+100+10+20, Main.tileOffsetY+Main.tileOffsetY*5+5));
 

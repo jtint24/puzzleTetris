@@ -18,8 +18,8 @@ public class Canvas extends JPanel {
 
     public Graphics paintBackground(Graphics g) {
         int offset = Application.frameCount/3 % 100 - 100;
-        for (int i = 0; i<20; i++) {
-            for (int j = 0; j<20; j++) {
+        for (int i = 0; i<11; i++) {
+            for (int j = 0; j<10; j++) {
                 if ((i+j) % 2 == 0) {
                     g.drawImage(ImageFetcher.getImage("splotchSmall"), offset+i*100, offset+j*100, null);
                 }
@@ -31,9 +31,8 @@ public class Canvas extends JPanel {
         g.fillRoundRect(Main.tileOffsetX-25,Main.tileOffsetY-25,10*Main.tileHeight+50, 15*Main.tileHeight+50, 50,50);
 
         for (int i = 0; i<10; i++) {
-            for (int j = 0; j<20; j++) {
-                // g.drawImage(ImageFetcher.preparedImage("splotchDot"), i*Main.tileOffsetX+Main.tileOffsetX, j*Main.tileOffsetY+Main.tileOffsetY, null);
-            }
+            int j = 2;
+            g.drawImage(ImageFetcher.preparedImage("splotchDot"), i*Main.tileOffsetX+Main.tileOffsetX, j*Main.tileOffsetY+Main.tileOffsetY, null);
         }
 
         ((Graphics2D)g).setPaint(new Color(0xCCFFFFFF, true));
