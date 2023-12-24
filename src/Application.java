@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Application extends JFrame {
     static KeyData keyData = new KeyData();
@@ -15,8 +16,8 @@ public class Application extends JFrame {
     }
 
     static class KeyData {
-        private final HashMap<Integer, Boolean> data = new HashMap<>();
-        private final HashMap<Integer, Boolean> typeData = new HashMap<>();
+        private final ConcurrentHashMap<Integer, Boolean> data = new ConcurrentHashMap<>();
+        private final ConcurrentHashMap<Integer, Boolean> typeData = new ConcurrentHashMap<>();
 
         void setPressed(int key) {
             data.put(key, true);
