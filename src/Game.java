@@ -25,7 +25,7 @@ public class Game implements Renderable {
     }
 
     public void runFrame() {
-        if (activePiece == null) {
+        if (activePiece == null && state == GameState.PLAY) {
             getNewPiece();
         }
 
@@ -40,9 +40,12 @@ public class Game implements Renderable {
             }
             activePiece = null;
             scoreBonus = grid.runLossFrame();
+
             if (!grid.existsVisibleTile() && grid.lineClears.size() == 0) {
                 state = GameState.TRY_AGAIN;
             }
+        } else if (state == GameState.TRY_AGAIN) {
+            scoreBonus = 0;
         } else if (grid.isFull()) {
             scoreBonus = grid.runLineClears();
             state = GameState.LOST;
@@ -260,6 +263,12 @@ public class Game implements Renderable {
 
         c.textToRender.push(new RenderedText(timeString, Main.tileOffsetX+10*Main.tileHeight+100+10+20, Main.tileOffsetY+Main.tileOffsetY*5+5));
 
+        if (state == GameState.TRY_AGAIN) {
+            c.imagesToRender.push(new RenderedImage(ImageFetcher.getImage("loss"), 100, 100));
+            c.textToRender.push(new RenderedText("Play Again", 100, 300));
+            c.textToRender.push(new RenderedText("Quit", 100, 350));
+
+        }
 
     }
 }

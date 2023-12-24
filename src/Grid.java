@@ -244,7 +244,7 @@ public class Grid implements Renderable {
             for (int j = 0; j<tiles[0].length; j++) {
                 Tile tile = tiles[i][j];
                 if (tile != null) {
-                    if ((boardHeight-j)*Main.tileHeight > Main.tileOffsetY) {
+                    if ((boardHeight-j)*Main.tileHeight+100 > tiles[i][j].offsetY) {
                         return true;
                     }
                 }
