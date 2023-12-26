@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.Objects;
 
 public class Main implements Runnable {
@@ -33,6 +32,18 @@ public class Main implements Runnable {
         frame.setVisible(true);
         frame.setSize(new Dimension(1000, 850));
         frame.setResizable(false);
+
+        frame.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                Application.mouseData.setClicked(e);
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                Application.mouseData.updateXY(e);
+            }
+        });
         frame.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -49,6 +60,31 @@ public class Main implements Runnable {
             public void keyReleased(KeyEvent e) {
                 int key = e.getExtendedKeyCode();
                 Application.keyData.setReleased(key);
+            }
+        });
+
+        frame.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent e) {}
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                Application.mouseData.setClicked(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                Application.mouseData.setReleased(e);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                Application.mouseData.updateXY(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                Application.mouseData.updateXY(e);
             }
         });
         return frame;

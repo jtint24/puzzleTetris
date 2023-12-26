@@ -1,9 +1,12 @@
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Application extends JFrame {
     static KeyData keyData = new KeyData();
+    static MouseData mouseData = new MouseData();
     static int frameCount = 0;
 
     public Application(String title) {
@@ -13,6 +16,63 @@ public class Application extends JFrame {
     static void advanceFrame() {
         frameCount++;
         keyData.runFrame();
+        mouseData.runFrame();
+    }
+
+    static class MouseData {
+        private Component clickedComponent;
+        private double mouseX = 0;
+        private double mouseY = 0;
+        private boolean clicked = false;
+        private boolean pressed = false;
+
+        Component getClickedComponent() {
+            return clickedComponent;
+        }
+
+        double getMouseX() {
+            return mouseX;
+        }
+
+        double getMouseY() {
+            return mouseY;
+        }
+
+        boolean getIsClicked() {
+            return clicked;
+        }
+
+        boolean getIsPressed() {
+            return pressed;
+        }
+
+        void setClicked(MouseEvent e) {
+            clicked = true;
+            pressed = true;
+            clickedComponent = e.getComponent();
+            updateXY(e);
+        }
+
+        void setReleased(MouseEvent e) {
+            clicked = false;
+            pressed = false;
+            clickedComponent = null;
+            updateXY(e);
+        }
+
+        void updateXY(MouseEvent e) {
+            mouseX = e.getX();
+            mouseY = e.getY();
+        }
+
+        boolean inBox(int minX, int minY, int maxX, int maxY) {
+            return minX < mouseX && mouseX < maxX && minY < mouseY && mouseY < maxY;
+        }
+
+        void runFrame() {
+            clicked = false;
+            // System.out.println(mouseX+", "+mouseY);
+        }
     }
 
     static class KeyData {

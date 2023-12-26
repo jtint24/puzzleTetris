@@ -1,4 +1,9 @@
+import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class Game implements Renderable {
     Grid grid;
@@ -9,19 +14,10 @@ public class Game implements Renderable {
     long startTimeMillis = System.currentTimeMillis();
     long lossTimeMillis = 0;
 
+    List<Tile.TileType> availableTypes;
+
     Game() {
-        grid = new Grid(10, 15);
-        Tile.TileType[] values = Tile.TileType.values();
-        /* for (int i = 0; i<6; i++) {
-            for (int j = 5; j<10; j++) {
-                Tile.TileType value = values[Math.min(i%6, j%6)];
-                grid.tiles[i][j] = new Tile(value);
-            }
-        }
-        grid.tiles[2][4] = new Tile(Tile.TileType.ORANGE);*/
-
-        getNewPiece();
-
+        reset();
     }
 
     public void runFrame() {
@@ -62,8 +58,8 @@ public class Game implements Renderable {
             stateChangeFrame = Application.frameCount;
         }
 
-        System.out.println(stateChangeFrame+" "+Application.frameCount);
-        System.out.println(state);
+        // System.out.println(stateChangeFrame+" "+Application.frameCount);
+        // System.out.println(state);
         if (stateChangeFrame+5 < Application.frameCount && state == GameState.PAUSE) {
             state = GameState.PLAY;
         }
@@ -160,7 +156,7 @@ public class Game implements Renderable {
 
     public void getNewPiece() {
 
-        activePiece = Piece.getRandomPiece();
+        activePiece = Piece.getRandomPiece(availableTypes);
         activePiece.headX = 5;
         /*
         for (int i = 0; i<6; i++) {
@@ -237,6 +233,22 @@ public class Game implements Renderable {
         return false;
     }
 
+    public void reset() {
+        grid = new Grid(10, 15);
+        List<Tile.TileType> types = Arrays.asList(Tile.TileType.values());
+        availableTypes = Utils.randomSubList(types, 3);
+        for (Tile.TileType type : availableTypes) {
+            System.out.println(type);
+        }
+
+        getNewPiece();
+        state = GameState.PLAY;
+        stateChangeFrame = 0;
+        score = 0;
+        startTimeMillis = System.currentTimeMillis();
+        lossTimeMillis = 0;
+    }
+
     @Override
     public void render(Canvas c) {
         grid.render(c);
@@ -265,9 +277,20 @@ public class Game implements Renderable {
 
         if (state == GameState.TRY_AGAIN) {
             c.imagesToRender.push(new RenderedImage(ImageFetcher.getImage("loss"), 100, 100));
-            c.textToRender.push(new RenderedText("Play Again", 100, 300));
-            c.textToRender.push(new RenderedText("Quit", 100, 350));
+            if (Application.mouseData.inBox(100, 300, 300, 340)) {
+                c.textToRender.push(new RenderedText("Play Again", 100, 300, Tile.TileType.RED.color));
+                if (Application.mouseData.getIsClicked()) {
+                    reset();
+                }
+            } else {
+                c.textToRender.push(new RenderedText("Play Again", 100, 300));
+            }
 
+            if (Application.mouseData.inBox(100, 360, 190, 400)) {
+                c.textToRender.push(new RenderedText("Quit", 100, 360, Tile.TileType.RED.color));
+            } else {
+                c.textToRender.push(new RenderedText("Quit", 100, 360));
+            }
         }
 
     }

@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 public class Tile {
@@ -22,8 +24,8 @@ public class Tile {
         this.type = type;
     }
 
-    public Tile() {
-        this(TileType.values()[(int) (Math.random() * TileType.values().length)]);
+    public Tile(List<TileType> types) {
+        this(types.get((int) (types.size() * Math.random()) ));
     }
 
     public Image getImage() {
