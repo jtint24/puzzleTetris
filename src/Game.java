@@ -237,9 +237,10 @@ public class Game implements Renderable {
         grid = new Grid(10, 15);
         List<Tile.TileType> types = Arrays.asList(Tile.TileType.values());
         availableTypes = Utils.randomSubList(types, 3);
-        for (Tile.TileType type : availableTypes) {
-            System.out.println(type);
-        }
+
+        // for (Tile.TileType type : availableTypes) {
+            // System.out.println(type);
+        // }
 
         getNewPiece();
         state = GameState.PLAY;

@@ -66,9 +66,10 @@ public class Grid implements Renderable {
             for (int j = 0; j<tiles[0].length; j++) {
                 if (tiles[i][j] != null && tiles[i][j].soonToClear) {
                     tiles[i][j] = null;
-
-                    if (j >= 1 && tiles[i][j-1] != null) {
-                        tiles[i][j-1].multiplier += 1;
+                    int j_diff = 1;
+                    while (tiles[i][j-j_diff] != null ) {
+                        tiles[i][j - j_diff].multiplier += 1;
+                        j_diff++;
                     }
                 }
             }
