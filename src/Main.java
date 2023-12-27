@@ -19,7 +19,7 @@ public class Main implements Runnable {
 
         frame.setContentPane(gameCanvas);
 
-        game = new Game();
+        game = new MainGame();
         game.render(gameCanvas);
 
         Main mainInstance = new Main();

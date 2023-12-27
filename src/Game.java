@@ -13,8 +13,8 @@ public class Game implements Renderable {
     int stateChangeFrame = 0;
     long startTimeMillis = System.currentTimeMillis();
     long lossTimeMillis = 0;
-
     List<Tile.TileType> availableTypes;
+    int dropSpeed = 5;
 
     Game() {
         reset();
@@ -109,10 +109,10 @@ public class Game implements Renderable {
             }
         }
         //if (Application.frameCount % 10 == 0) {
-        dropPiece(5, false);
+        dropPiece(dropSpeed, false);
         //}
         if (pieceConflicts()) {
-            raisePiece(5);
+            raisePiece(dropSpeed);
             copyPieceToGrid();
             activePiece = null;
             // getNewPiece();
@@ -275,24 +275,5 @@ public class Game implements Renderable {
         String timeString = String.format("%d:%02d'%02d\"%03d", hours, minutes, seconds, milliseconds);
 
         c.textToRender.push(new RenderedText(timeString, Main.tileOffsetX+10*Main.tileHeight+100+10+20, Main.tileOffsetY+Main.tileOffsetY*5+5));
-
-        if (state == GameState.TRY_AGAIN) {
-            c.imagesToRender.push(new RenderedImage(ImageFetcher.getImage("loss"), 100, 100));
-            if (Application.mouseData.inBox(100, 300, 300, 340)) {
-                c.textToRender.push(new RenderedText("Play Again", 100, 300, Tile.TileType.RED.color));
-                if (Application.mouseData.getIsClicked()) {
-                    reset();
-                }
-            } else {
-                c.textToRender.push(new RenderedText("Play Again", 100, 300));
-            }
-
-            if (Application.mouseData.inBox(100, 360, 190, 400)) {
-                c.textToRender.push(new RenderedText("Quit", 100, 360, Tile.TileType.RED.color));
-            } else {
-                c.textToRender.push(new RenderedText("Quit", 100, 360));
-            }
-        }
-
     }
 }
