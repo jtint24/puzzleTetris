@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Time;
 import java.util.Objects;
 
 public class Main implements Runnable {
@@ -20,6 +21,7 @@ public class Main implements Runnable {
         frame.setContentPane(gameCanvas);
 
         game = new MainGame();
+        // game = new TimedGame();
         game.render(gameCanvas);
 
         Main mainInstance = new Main();

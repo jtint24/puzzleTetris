@@ -9,6 +9,13 @@ public class MainGame extends Game {
 
     MainGame() {
         reset();
+        for (int i = 0; i<super.grid.tiles.length; i++) {
+            for (int j = super.grid.tiles[0].length-3; j < super.grid.tiles[0].length; j++) {
+                if (Math.random() > .2) {
+                    super.grid.tiles[i][j] = new Tile(super.availableTypes);
+                }
+            }
+        }
     }
 
     public void runFrame() {

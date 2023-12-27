@@ -57,12 +57,13 @@ public class Canvas extends JPanel {
 
         // Level
 
-        ((Graphics2D)g).setPaint(new Color(0x80FFFFFF, true));
-        g.fillRoundRect(Main.tileOffsetX+10*Main.tileHeight+75,Main.tileOffsetY-25+6*Main.tileHeight,6*Main.tileHeight+50, Main.tileHeight+50, 50,50);
+        if (!(Main.game instanceof TimedGame)) {
+            ((Graphics2D) g).setPaint(new Color(0x80FFFFFF, true));
+            g.fillRoundRect(Main.tileOffsetX + 10 * Main.tileHeight + 75, Main.tileOffsetY - 25 + 6 * Main.tileHeight, 6 * Main.tileHeight + 50, Main.tileHeight + 50, 50, 50);
 
-        ((Graphics2D)g).setPaint(new Color(0xCCFFFFFF, true));
-        g.fillRect(Main.tileOffsetX+10*Main.tileHeight+100,Main.tileOffsetY+6*Main.tileHeight,6*Main.tileHeight, Main.tileHeight);
-
+            ((Graphics2D) g).setPaint(new Color(0xCCFFFFFF, true));
+            g.fillRect(Main.tileOffsetX + 10 * Main.tileHeight + 100, Main.tileOffsetY + 6 * Main.tileHeight, 6 * Main.tileHeight, Main.tileHeight);
+        }
 
 
         return g;
