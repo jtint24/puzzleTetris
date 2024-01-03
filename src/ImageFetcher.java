@@ -33,7 +33,9 @@ public class ImageFetcher {
             "logoSmall",
             "classicSmall",
             "scoreSmall",
-            "timeSmall"
+            "timeSmall",
+            "timeup",
+            "pause"
     };
 
     public static Image getImage(String s) {

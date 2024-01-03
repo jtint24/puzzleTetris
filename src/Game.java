@@ -7,7 +7,7 @@ public class Game implements Renderable {
     Grid grid;
     Piece activePiece;
     int score = 0;
-    GameState state = GameState.PLAY;
+    GameState state = GameState.COUNT_IN;
     int stateChangeFrame = 0;
     long startTimeMillis = System.currentTimeMillis();
     long lossTimeMillis = 0;
@@ -19,52 +19,61 @@ public class Game implements Renderable {
     }
 
     public void runFrame() {
-        if (activePiece == null && state == GameState.PLAY) {
-            getNewPiece();
-        }
-
-        int lineCount = grid.lineClears.size();
-        int scoreBonus;
-
-        if (state == GameState.PLAY) {
-            scoreBonus = grid.runFrame();
-        }  else if (state == GameState.LOST) {
-            if (lossTimeMillis == 0) {
-                lossTimeMillis = System.currentTimeMillis();
+        if (state == GameState.COUNT_IN) {
+            long millisElapsed = System.currentTimeMillis()-startTimeMillis;
+            int seconds = (int) (millisElapsed % 60000)/1000;
+            if (seconds > 3) {
+                startTimeMillis = System.currentTimeMillis();
+                state = GameState.PLAY;
             }
-            activePiece = null;
-            scoreBonus = grid.runLossFrame();
-
-            if (!grid.existsVisibleTile() && grid.lineClears.size() == 0) {
-                state = GameState.TRY_AGAIN;
-            }
-        } else if (state == GameState.TRY_AGAIN) {
-            scoreBonus = 0;
-        } else if (grid.isFull()) {
-            scoreBonus = grid.runLineClears();
-            state = GameState.LOST;
-        } else if (state == GameState.PAUSE) {
-            scoreBonus = grid.runLineClears();
         } else {
-            scoreBonus = 0;
-        }
+            if (activePiece == null && state == GameState.PLAY) {
+                getNewPiece();
+            }
 
-        score += scoreBonus;
+            int lineCount = grid.lineClears.size();
+            int scoreBonus;
 
-        if (lineCount < grid.lineClears.size() && state == GameState.PLAY) {
-            state = GameState.PAUSE;
-            stateChangeFrame = Application.frameCount;
-        }
+            if (state == GameState.PLAY) {
+                scoreBonus = grid.runFrame();
+            } else if (state == GameState.LOST) {
+                if (lossTimeMillis == 0) {
+                    lossTimeMillis = System.currentTimeMillis();
+                }
+                activePiece = null;
+                scoreBonus = grid.runLossFrame();
 
-        // System.out.println(stateChangeFrame+" "+Application.frameCount);
-        // System.out.println(state);
-        if (stateChangeFrame+5 < Application.frameCount && state == GameState.PAUSE) {
-            state = GameState.PLAY;
-        }
+                if (!grid.existsVisibleTile() && grid.lineClears.size() == 0) {
+                    state = GameState.TRY_AGAIN;
+                }
+            } else if (state == GameState.TRY_AGAIN) {
+                scoreBonus = 0;
+            } else if (grid.isFull()) {
+                scoreBonus = grid.runLineClears();
+                state = GameState.LOST;
+            } else if (state == GameState.PAUSE) {
+                scoreBonus = grid.runLineClears();
+            } else {
+                scoreBonus = 0;
+            }
 
-        // score += 2;
-        if (state == GameState.PLAY) {
-            movePiece();
+            score += scoreBonus;
+
+            if (lineCount < grid.lineClears.size() && state == GameState.PLAY) {
+                state = GameState.PAUSE;
+                stateChangeFrame = Application.frameCount;
+            }
+
+            // System.out.println(stateChangeFrame+" "+Application.frameCount);
+            // System.out.println(state);
+            if (stateChangeFrame + 5 < Application.frameCount && state == GameState.PAUSE) {
+                state = GameState.PLAY;
+            }
+
+            // score += 2;
+            if (state == GameState.PLAY) {
+                movePiece();
+            }
         }
     }
 
@@ -241,7 +250,7 @@ public class Game implements Renderable {
         // }
 
         getNewPiece();
-        state = GameState.PLAY;
+        state = GameState.COUNT_IN;
         stateChangeFrame = 0;
         score = 0;
         startTimeMillis = System.currentTimeMillis();
@@ -251,7 +260,15 @@ public class Game implements Renderable {
     @Override
     public void render(Canvas c) {
         grid.render(c);
-        if (activePiece != null) {
+
+        if (state == GameState.COUNT_IN) {
+            long millisElapsed = System.currentTimeMillis()-startTimeMillis;
+            int seconds = (int) (millisElapsed % 60000)/1000;
+            String label = seconds > 2 ? "Go!" : ""+(3-seconds);
+            c.textToRender.push(new RenderedText(label, Main.tileOffsetX+(int)(Main.tileHeight*4.5), Main.tileOffsetY+Main.tileOffsetY*9, Color.BLACK, 64));
+        }
+
+        if (activePiece != null && state != GameState.COUNT_IN) {
             activePiece.render(c);
         }
 
@@ -269,6 +286,13 @@ public class Game implements Renderable {
         int seconds = (int) ((millisElapsed % 60000) / 1000);
         int minutes = (int) ((millisElapsed % 3600000)) / 60000;
         int hours = (int) ((millisElapsed % 360000000)) / 3600000 % 10;
+
+        if (state == GameState.COUNT_IN) {
+            milliseconds = 0;
+            seconds = 0;
+            minutes = 0;
+            hours = 0;
+        }
 
         String timeString = String.format("%d:%02d'%02d\"%03d", hours, minutes, seconds, milliseconds);
 

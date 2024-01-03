@@ -9,6 +9,12 @@ public class MainGame extends Game {
 
     MainGame() {
         reset();
+
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
         for (int i = 0; i<super.grid.tiles.length; i++) {
             for (int j = super.grid.tiles[0].length-3; j < super.grid.tiles[0].length; j++) {
                 if (Math.random() > .2) {
@@ -36,10 +42,6 @@ public class MainGame extends Game {
             super.availableTypes.add(newType);
         }
 
-    }
-
-    public void reset() {
-        super.reset();
     }
 
     @Override
