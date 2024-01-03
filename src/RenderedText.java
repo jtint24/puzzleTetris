@@ -5,6 +5,7 @@ public class RenderedText {
     int x;
     int y;
     Color color = Color.BLACK;
+    int size = 40;
 
     public RenderedText(String label, int x, int y) {
         this.label = label;
@@ -14,6 +15,11 @@ public class RenderedText {
     public RenderedText(String label, int x, int y, Color color) {
         this(label, x, y);
         this.color = color;
+    }
+
+    public RenderedText(String label, int x, int y, Color color, int size) {
+        this(label, x, y, color);
+        this.size = size;
     }
 
     public Object clone() {

@@ -44,6 +44,9 @@ public class ScoreGame extends Game {
 
             if (Application.mouseData.inBox(100, 360, 190, 400)) {
                 c.textToRender.push(new RenderedText("Quit", 100, 360, Tile.TileType.RED.color));
+                if (Application.mouseData.getIsClicked()) {
+                    Main.phase = Phase.MENU;
+                }
             } else {
                 c.textToRender.push(new RenderedText("Quit", 100, 360));
             }

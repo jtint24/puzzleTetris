@@ -28,5 +28,8 @@ public class LineClear implements Renderable {
         c.textToRender.push(
                 new RenderedText(""+scoreBonus, x, y, type.color)
         );
+        c.textToRender.push(
+                new RenderedText("x"+multiplier, x, y+25, type.color, 16)
+        );
     }
 }

@@ -97,7 +97,7 @@ public class Canvas extends JPanel {
         g.setFont(FontFetcher.getFont("jost.ttf", 40, TextAttribute.WEIGHT_BOLD, Color.BLACK));
 
         for (RenderedText text : textToRenderCopy) {
-            g.setFont(FontFetcher.getFont("jost.ttf", 40, TextAttribute.WEIGHT_BOLD, text.color));
+            g.setFont(FontFetcher.getFont("jost.ttf", text.size, TextAttribute.WEIGHT_BOLD, text.color));
             g.drawString(text.label, text.x, text.y);
         }
     }
