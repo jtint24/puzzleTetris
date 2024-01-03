@@ -71,7 +71,7 @@ public class Application extends JFrame {
 
         void runFrame() {
             clicked = false;
-            // System.out.println(mouseX+", "+mouseY);
+            System.out.println(mouseX+", "+mouseY);
         }
     }
 

@@ -28,7 +28,12 @@ public class ImageFetcher {
             "splotchSmall",
             "splotchSmall",
             "splotchDot",
-            "loss"
+            "loss",
+            "logo",
+            "logoSmall",
+            "classicSmall",
+            "scoreSmall",
+            "timeSmall"
     };
 
     public static Image getImage(String s) {

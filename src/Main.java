@@ -1,3 +1,4 @@
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -10,6 +11,7 @@ public class Main implements Runnable {
     public static int tileOffsetY = 37;
     static Canvas gameCanvas;
     static Game game;
+    static Phase phase = Phase.MENU;
     public static void main(String[] args) {
 
         ImageFetcher.initializeImages();
@@ -99,10 +101,17 @@ public class Main implements Runnable {
         boolean running = true;
         while (running) {
             gameCanvas.clear();
-            game.runFrame();
 
-            // game.runFrame();
-            game.render(gameCanvas);
+            if (phase == Phase.GAME) {
+                game.runFrame();
+                // game.runFrame();
+                game.render(gameCanvas);
+            } else if (phase == Phase.MENU) {
+                runMainMenu();
+                renderMainMenu(gameCanvas);
+            }
+
+
             gameCanvas.repaint();
 
             // game.grid.toConsole();
@@ -114,6 +123,31 @@ public class Main implements Runnable {
                 running = false;
                 System.out.println(err.getMessage());
             }
+        }
+    }
+
+    private void renderMainMenu(Canvas c) {
+        c.imagesToRender.push(new RenderedImage(ImageFetcher.getImage("logoSmall"), 20, 250));
+        c.imagesToRender.push(new RenderedImage(ImageFetcher.getImage("classicSmall"), 480, 180));
+        c.imagesToRender.push(new RenderedImage(ImageFetcher.getImage("scoreSmall"), 480, 410));
+        c.imagesToRender.push(new RenderedImage(ImageFetcher.getImage("timeSmall"), 480+230, 410));
+    }
+    private void runMainMenu() {
+        if (Application.mouseData.inBox(485, 211,959, 404) && Application.mouseData.getIsClicked()) {
+            // Classic mode
+            phase = Phase.GAME;
+            game = new MainGame();
+        }
+        if (Application.mouseData.inBox(483, 442, 705, 653) && Application.mouseData.getIsClicked()) {
+            // Score mode
+            phase = Phase.GAME;
+            game = new ScoreGame();
+        }
+        if (Application.mouseData.inBox(727, 447, 954, 666) && Application.mouseData.getIsClicked()) {
+            // Time mode
+            phase = Phase.GAME;
+            game = new TimedGame();
+
         }
     }
 }

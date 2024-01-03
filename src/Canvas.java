@@ -26,6 +26,17 @@ public class Canvas extends JPanel {
             }
         }
 
+        if (Main.phase == Phase.MENU) {
+            ((Graphics2D) g).setPaint(new Color(230, 230, 255));
+            g.fillRect(0, 150, 1000, 530);
+        }
+
+        return g;
+    }
+
+    public Graphics paintGameUI(Graphics g) {
+
+
 
         ((Graphics2D)g).setPaint(new Color(0x80FFFFFF, true));
         g.fillRoundRect(Main.tileOffsetX-25,Main.tileOffsetY-25,10*Main.tileHeight+50, 15*Main.tileHeight+50, 50,50);
@@ -65,13 +76,16 @@ public class Canvas extends JPanel {
             g.fillRect(Main.tileOffsetX + 10 * Main.tileHeight + 100, Main.tileOffsetY + 6 * Main.tileHeight, 6 * Main.tileHeight, Main.tileHeight);
         }
 
-
         return g;
     }
     @Override
     public void paintComponent(Graphics g) {
 
         g = paintBackground(g);
+
+        if (Main.phase == Phase.GAME) {
+            g = paintGameUI(g);
+        }
 
         Stack<RenderedImage> imagesToRenderCopy = (Stack<RenderedImage>) imagesToRender.clone();
         // System.out.println(imagesToRenderCopy.size());
