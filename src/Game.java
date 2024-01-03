@@ -13,6 +13,9 @@ public class Game implements Renderable {
     long lossTimeMillis = 0;
     List<Tile.TileType> availableTypes;
     int dropSpeed = 5;
+    long pauseTimeMillis = 0;
+
+    boolean paused = false;
 
     Game() {
         reset();
@@ -27,6 +30,15 @@ public class Game implements Renderable {
                 state = GameState.PLAY;
             }
         } else {
+            if (Application.keyData.getIsTyped(KeyEvent.VK_ENTER)) {
+                paused = !paused;
+                pauseTimeMillis = System.currentTimeMillis()-startTimeMillis;
+            }
+            if (paused) {
+                startTimeMillis = System.currentTimeMillis()-pauseTimeMillis;
+                return;
+            }
+
             if (activePiece == null && state == GameState.PLAY) {
                 getNewPiece();
             }
@@ -66,8 +78,9 @@ public class Game implements Renderable {
 
             // System.out.println(stateChangeFrame+" "+Application.frameCount);
             // System.out.println(state);
-            if (stateChangeFrame + 5 < Application.frameCount && state == GameState.PAUSE) {
+            if (stateChangeFrame + 6 < Application.frameCount && state == GameState.PAUSE) {
                 state = GameState.PLAY;
+                grid.removeSoonToClearTiles();
             }
 
             // score += 2;
@@ -277,6 +290,9 @@ public class Game implements Renderable {
         c.textToRender.push(new RenderedText(scoreString, Main.tileOffsetX+10*Main.tileHeight+100+10+10, Main.tileOffsetY+Main.tileOffsetY+5));
 
         // Time UI
+        if (paused) {
+            startTimeMillis = System.currentTimeMillis() - pauseTimeMillis;
+        }
 
         long millisElapsed = System.currentTimeMillis()-startTimeMillis;
         if (lossTimeMillis >= startTimeMillis) {

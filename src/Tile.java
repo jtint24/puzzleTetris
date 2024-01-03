@@ -28,7 +28,12 @@ public class Tile {
         this(types.get((int) (types.size() * Math.random()) ));
     }
 
+
+
     public Image getImage() {
+        if (Application.frameCount % 12 < 6 && soonToClear) {
+            return ImageFetcher.preparedImage("cleartile");
+        }
         String imageName = type.name().toLowerCase(Locale.ROOT)+"TileSketchSmall";
         return ImageFetcher.preparedImage(imageName);
     }

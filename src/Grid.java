@@ -4,12 +4,14 @@ import java.util.Collections;
 
 public class Grid implements Renderable {
     Tile[][] tiles;
+    Tile[][] soonToClearTiles;
     ArrayList<LineClear> lineClears = new ArrayList<>();
 
     Point[][] velocities;
 
     public Grid(int width, int height) {
         tiles = new Tile[width][height];
+        soonToClearTiles = new Tile[width][height];
         velocities = new Point[width][height];
     }
 
@@ -65,6 +67,7 @@ public class Grid implements Renderable {
         for (int i = 0; i<tiles.length; i++) {
             for (int j = 0; j<tiles[0].length; j++) {
                 if (tiles[i][j] != null && tiles[i][j].soonToClear) {
+                    soonToClearTiles[i][j] = tiles[i][j];
                     tiles[i][j] = null;
                     int j_diff = 1;
                     while (tiles[i][j-j_diff] != null ) {
@@ -90,6 +93,7 @@ public class Grid implements Renderable {
             tile.soonToClear = true;
             maxMultiplier = Math.max(maxMultiplier, tile.multiplier);
         }
+
 
         int score = getScoreForClear(matchedTiles.size(), maxMultiplier);
 
@@ -204,6 +208,9 @@ public class Grid implements Renderable {
         for (int i = 0; i<tiles.length; i++) {
             for (int j = 0; j<tiles[0].length; j++) {
                 Tile searchedTile = tiles[i][j];
+                if (soonToClearTiles[i][j] != null) {
+                    searchedTile = soonToClearTiles[i][j];
+                }
 
                 if (searchedTile != null) {
                     // name = "greenTileSmall";
@@ -277,5 +284,16 @@ public class Grid implements Renderable {
 
 
         return scoreBonus;
+    }
+
+    public void removeSoonToClearTiles() {
+        for (int i = 0; i<tiles.length; i++) {
+            for (int j = 0; j<tiles[0].length; j++) {
+                Tile tile = soonToClearTiles[i][j];
+                if (tile != null && tile.soonToClear) {
+                    soonToClearTiles[i][j] = null;
+                }
+            }
+        }
     }
 }

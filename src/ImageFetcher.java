@@ -35,7 +35,8 @@ public class ImageFetcher {
             "scoreSmall",
             "timeSmall",
             "timeup",
-            "pause"
+            "pause",
+            "cleartile"
     };
 
     public static Image getImage(String s) {
