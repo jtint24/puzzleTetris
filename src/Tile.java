@@ -8,7 +8,7 @@ public class Tile {
     int offsetY = 0;
     int offsetX = 0;
     int multiplier = 1;
-    boolean soonToClear = false;
+    int clearFrame = 0;
 
     public static final String BLACK_BACKGROUND = "\033[40m"; // BLACK
     public static final String RED_BACKGROUND = "\033[41m"; // RED
@@ -29,9 +29,12 @@ public class Tile {
     }
 
 
+    public boolean soonToClear() {
+        return clearFrame > 0;
+    }
 
     public Image getImage() {
-        if (Application.frameCount % 12 < 6 && soonToClear) {
+        if (Application.frameCount % 10 < 5 && soonToClear()) {
             return ImageFetcher.preparedImage("cleartile");
         }
         String imageName = type.name().toLowerCase(Locale.ROOT)+"TileSketchSmall";

@@ -66,7 +66,7 @@ public class Grid implements Renderable {
         // Remove tiles in lines
         for (int i = 0; i<tiles.length; i++) {
             for (int j = 0; j<tiles[0].length; j++) {
-                if (tiles[i][j] != null && tiles[i][j].soonToClear) {
+                if (tiles[i][j] != null && tiles[i][j].soonToClear()) {
                     soonToClearTiles[i][j] = tiles[i][j];
                     tiles[i][j] = null;
                     int j_diff = 1;
@@ -90,7 +90,7 @@ public class Grid implements Renderable {
         int maxMultiplier = 1;
 
         for (Tile tile : matchedTiles) {
-            tile.soonToClear = true;
+            tile.clearFrame = Application.frameCount;
             maxMultiplier = Math.max(maxMultiplier, tile.multiplier);
         }
 
@@ -110,6 +110,7 @@ public class Grid implements Renderable {
         dropTiles();
         removeLines();
         resetMultipliers();
+        removeSoonToClearTiles();
         int scoreBonus = runLineClears();
 
         // Return the score bonus
@@ -166,7 +167,7 @@ public class Grid implements Renderable {
         if (y >= tiles[0].length-1) {
             return true;
         } else {
-            return (tiles[x][y+1] != null) && tileIsResting(x, y+1);
+            return (tiles[x][y+1] != null || soonToClearTiles[x][y+1] != null) && tileIsResting(x, y+1);
         }
     }
 
@@ -282,6 +283,7 @@ public class Grid implements Renderable {
             }
         }
 
+        removeAllSoonToClearTiles();
 
         return scoreBonus;
     }
@@ -290,7 +292,18 @@ public class Grid implements Renderable {
         for (int i = 0; i<tiles.length; i++) {
             for (int j = 0; j<tiles[0].length; j++) {
                 Tile tile = soonToClearTiles[i][j];
-                if (tile != null && tile.soonToClear) {
+                if (tile != null && tile.soonToClear() && tile.clearFrame+15 < Application.frameCount) {
+                    soonToClearTiles[i][j] = null;
+                }
+            }
+        }
+    }
+
+    public void removeAllSoonToClearTiles() {
+        for (int i = 0; i<tiles.length; i++) {
+            for (int j = 0; j<tiles[0].length; j++) {
+                Tile tile = soonToClearTiles[i][j];
+                if (tile != null) {
                     soonToClearTiles[i][j] = null;
                 }
             }

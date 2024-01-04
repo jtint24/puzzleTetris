@@ -39,7 +39,7 @@ public class Game implements Renderable {
                 return;
             }
 
-            if (activePiece == null && state == GameState.PLAY) {
+            if (activePiece == null && state == GameState.PLAY ) {
                 getNewPiece();
             }
 
@@ -63,8 +63,6 @@ public class Game implements Renderable {
             } else if (grid.isFull()) {
                 scoreBonus = grid.runLineClears();
                 state = GameState.LOST;
-            } else if (state == GameState.PAUSE) {
-                scoreBonus = grid.runLineClears();
             } else {
                 scoreBonus = 0;
             }
@@ -72,21 +70,16 @@ public class Game implements Renderable {
             score += scoreBonus;
 
             if (lineCount < grid.lineClears.size() && state == GameState.PLAY) {
-                state = GameState.PAUSE;
                 stateChangeFrame = Application.frameCount;
             }
 
             // System.out.println(stateChangeFrame+" "+Application.frameCount);
             // System.out.println(state);
-            if (stateChangeFrame + 6 < Application.frameCount && state == GameState.PAUSE) {
-                state = GameState.PLAY;
-                grid.removeSoonToClearTiles();
-            }
 
             // score += 2;
-            if (state == GameState.PLAY) {
+            //if (state == GameState.PLAY) {
                 movePiece();
-            }
+            //}
         }
     }
 
@@ -245,7 +238,7 @@ public class Game implements Renderable {
                 return true;
                 // continue;
             }
-            if (grid.tiles[location.x+activePiece.headX][location.y+activePiece.headY] != null) {
+            if (grid.tiles[location.x+activePiece.headX][location.y+activePiece.headY] != null || grid.soonToClearTiles[location.x+activePiece.headX][location.y+activePiece.headY] != null) {
                 return true;
             }
         }
@@ -281,6 +274,8 @@ public class Game implements Renderable {
             c.textToRender.push(new RenderedText(label, Main.tileOffsetX+(int)(Main.tileHeight*4.5), Main.tileOffsetY+Main.tileOffsetY*9, Color.BLACK, 64));
         }
 
+
+
         if (activePiece != null && state != GameState.COUNT_IN) {
             activePiece.render(c);
         }
@@ -313,5 +308,9 @@ public class Game implements Renderable {
         String timeString = String.format("%d:%02d'%02d\"%03d", hours, minutes, seconds, milliseconds);
 
         c.textToRender.push(new RenderedText(timeString, Main.tileOffsetX+10*Main.tileHeight+100+10+20, Main.tileOffsetY+Main.tileOffsetY*5+5));
+
+        if (paused) {
+            c.imagesToRender.push(new RenderedImage(ImageFetcher.getImage("pause"), 100, 100));
+        }
     }
 }
