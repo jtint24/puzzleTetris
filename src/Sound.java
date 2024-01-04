@@ -50,8 +50,14 @@ public class Sound {
         }
 
         // play, stop, loop the sound clip
+        /*clip.addLineListener(e -> {
+            if(e.getType() == LineEvent.Type.STOP){
+                e.getLine().close();
+            }
+        });*/
     }
     public void play(){
+
         clip.setFramePosition(0);  // Must always rewind!
         clip.start();
     }

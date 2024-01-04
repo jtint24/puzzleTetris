@@ -17,6 +17,9 @@ public class Game implements Renderable {
 
     boolean paused = false;
 
+    Sound dropSound = new Sound("drop");
+    Sound flipSound = new Sound("flip");
+
     Game() {
         reset();
     }
@@ -113,12 +116,16 @@ public class Game implements Renderable {
             activePiece.rotateCounterclockwise();
             if (pieceConflicts()) {
                 activePiece.rotateClockwise();
+            } else {
+                flipSound.play();
             }
         }
         if (Application.keyData.getIsTyped(KeyEvent.VK_DOWN)) {
             activePiece.rotateClockwise();
             if (pieceConflicts()) {
                 activePiece.rotateCounterclockwise();
+            } else {
+                flipSound.play();
             }
         }
         //if (Application.frameCount % 10 == 0) {
@@ -201,6 +208,7 @@ public class Game implements Renderable {
 
             grid.tiles[location.x+activePiece.headX][location.y+activePiece.headY] = tile;
         }
+        // dropSound.play();
     }
 
     private boolean piecePermanentlyConflicts() {
