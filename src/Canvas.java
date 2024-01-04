@@ -17,11 +17,11 @@ public class Canvas extends JPanel {
 
 
     public Graphics paintBackground(Graphics g) {
-        int offset = Application.frameCount/3 % 100 - 100;
-        for (int i = 0; i<11; i++) {
-            for (int j = 0; j<10; j++) {
+        int offset = Application.frameCount/3 % 110 - 110;
+        for (int i = 0; i<10; i++) {
+            for (int j = 0; j<9; j++) {
                 if ((i+j) % 2 == 0) {
-                    g.drawImage(ImageFetcher.getImage("splotchSmall"), offset+i*100, offset+j*100, null);
+                    g.drawImage(ImageFetcher.getImage("splotchSmall"), offset+i*110, offset+j*110, null);
                 }
             }
         }

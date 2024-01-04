@@ -69,6 +69,7 @@ public class ImageFetcher {
 
     public static Image preparedImage(String name) {
         BufferedImage unscaledImage = (BufferedImage) getImage(name);
-        return unscaledImage.getScaledInstance(Main.tileHeight+2, Main.tileHeight+2, Image.SCALE_DEFAULT);
+        return unscaledImage;
+        //return unscaledImage.getScaledInstance(Main.tileHeight+2, Main.tileHeight+2, Image.SCALE_DEFAULT);
     }
 }

@@ -184,9 +184,8 @@ public class Game implements Renderable {
         }
         */
 
-        if (piecePermanentlyConflicts()) {
+        if (pieceConflicts()) {
             state = GameState.LOST;
-        } else if (pieceConflicts()) {
             activePiece = null;
         }
 
