@@ -23,7 +23,7 @@ public class MainGame extends Game {
             }
         }
         for(int i = 0; i<200; i++) {
-            super.grid.runFrame();
+            super.grid.runFrame(true);
             super.grid.removeAllSoonToClearTiles();
         }
     }

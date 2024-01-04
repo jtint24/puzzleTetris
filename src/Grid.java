@@ -6,16 +6,23 @@ public class Grid implements Renderable {
     Tile[][] tiles;
     Tile[][] soonToClearTiles;
     ArrayList<LineClear> lineClears = new ArrayList<>();
-
     Point[][] velocities;
+
+    Sound[] clearSounds = new Sound[6];
 
     public Grid(int width, int height) {
         tiles = new Tile[width][height];
         soonToClearTiles = new Tile[width][height];
         velocities = new Point[width][height];
-    }
 
+        for (int i = 1; i<6; i++) {
+            clearSounds[i] = new Sound("pop"+i);
+        }
+    }
     public void removeLines() {
+        removeLines(true);
+    }
+    public void removeLines(boolean mute) {
         int scoreSum = 0;
 
         // Identify vertical lines
@@ -28,7 +35,7 @@ public class Grid implements Renderable {
                 Tile searchedTile = tiles[i][j];
 
                 if (searchedTile == null || !tileIsResting(i,j) || (matchedTiles.size() > 0 && searchedTile.type != matchedTiles.get(0).type)) {
-                    scoreSum += removeLine(i, startJ, i+1, j, matchedTiles);
+                    scoreSum += removeLine(mute, i, startJ, i+1, j, matchedTiles);
                     startJ = j;
                     matchedTiles = new ArrayList<>();
                 }
@@ -37,7 +44,7 @@ public class Grid implements Renderable {
                 }
             }
 
-            scoreSum += removeLine(i, startJ, i+1, tiles[0].length, matchedTiles);
+            scoreSum += removeLine(mute, i, startJ, i+1, tiles[0].length, matchedTiles);
         }
 
         // Identify horizontal lines
@@ -50,7 +57,7 @@ public class Grid implements Renderable {
                 Tile searchedTile = tiles[i][j];
 
                 if (searchedTile == null || !tileIsResting(i,j) || (matchedTiles.size() > 0 && searchedTile.type != matchedTiles.get(0).type)) {
-                    scoreSum += removeLine(startI, j, i, j+1, matchedTiles);
+                    scoreSum += removeLine(mute, startI, j, i, j+1, matchedTiles);
                     startI = i;
                     matchedTiles = new ArrayList<>();
                 }
@@ -60,7 +67,7 @@ public class Grid implements Renderable {
                 }
             }
 
-            scoreSum += removeLine(startI, j, tiles.length, j+1, matchedTiles);
+            scoreSum += removeLine(mute, startI, j, tiles.length, j+1, matchedTiles);
         }
 
         // Remove tiles in lines
@@ -82,7 +89,7 @@ public class Grid implements Renderable {
         // return scoreSum;
     }
 
-    private int removeLine(int startI, int startJ, int endI, int endJ, ArrayList<Tile> matchedTiles) {
+    private int removeLine(boolean mute, int startI, int startJ, int endI, int endJ, ArrayList<Tile> matchedTiles) {
         if (matchedTiles.size() < 3) {
             return 0;
         }
@@ -98,7 +105,9 @@ public class Grid implements Renderable {
         int score = getScoreForClear(matchedTiles.size(), maxMultiplier);
 
         lineClears.add(new LineClear(score, maxMultiplier, matchedTiles.get(0).type, startI*Main.tileHeight, startJ*Main.tileHeight));
-
+        if (!mute) {
+            clearSounds[Math.min(5, maxMultiplier)].play();
+        }
         return score;
     }
 
@@ -106,9 +115,9 @@ public class Grid implements Renderable {
         return tiles * 30 * multiplier;
     }
 
-    public int runFrame() {
+    public int runFrame(boolean mute) {
         dropTiles();
-        removeLines();
+        removeLines(mute);
         resetMultipliers();
         removeSoonToClearTiles();
         int scoreBonus = runLineClears();
@@ -124,7 +133,7 @@ public class Grid implements Renderable {
             for (int j = 0; j<tiles[0].length; j++) {
                 Tile searchedTile = tiles[i][j];
 
-                if (searchedTile != null && tileIsResting(i,j)) {
+                if (searchedTile != null && tileIsPermanentlyResting(i,j)) {
                     searchedTile.multiplier = 1;
                 }
             }
@@ -168,6 +177,14 @@ public class Grid implements Renderable {
             return true;
         } else {
             return (tiles[x][y+1] != null || soonToClearTiles[x][y+1] != null) && tileIsResting(x, y+1);
+        }
+    }
+
+    public boolean tileIsPermanentlyResting(int x, int y) {
+        if (y >= tiles[0].length-1) {
+            return true;
+        } else {
+            return (tiles[x][y+1] != null) && tileIsPermanentlyResting(x, y+1);
         }
     }
 

@@ -47,7 +47,7 @@ public class Game implements Renderable {
             int scoreBonus;
 
             if (state == GameState.PLAY) {
-                scoreBonus = grid.runFrame();
+                scoreBonus = grid.runFrame(false);
             } else if (state == GameState.LOST) {
                 if (lossTimeMillis == 0) {
                     lossTimeMillis = System.currentTimeMillis();
