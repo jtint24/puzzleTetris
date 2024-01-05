@@ -9,7 +9,7 @@ public class ScoreGame extends Game {
         level = (int) (elapsedTime/1000/60) + 1;
         // level = (score / 2500)+1;
         dropSpeed = Math.min(level*2, Math.min(10, 2+level));
-        if (level >= 5 && super.availableTypes.size() == 3 || (level >= 10 && super.availableTypes.size() == 4) || (level >= 15 && super.availableTypes.size() == 5)) {
+        if (level >= 6 && super.availableTypes.size() == 3 || (level >= 12 && super.availableTypes.size() == 4) || (level >= 18 && super.availableTypes.size() == 5)) {
             HashSet<Tile.TileType> typeSet = new HashSet<>(super.availableTypes);
             Tile.TileType newType;
             do {

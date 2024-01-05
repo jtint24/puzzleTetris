@@ -56,8 +56,7 @@ public class Sound {
             }
         });*/
     }
-    public void play(){
-
+    public void play() {
         clip.setFramePosition(0);  // Must always rewind!
         clip.start();
     }

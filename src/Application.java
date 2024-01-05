@@ -108,7 +108,11 @@ public class Application extends JFrame {
             if (typeData == null) {
                 return false;
             }
-            return typeData.get(key);
+            try {
+                return typeData.get(key);
+            } catch (NullPointerException npe) {
+                return false;
+            }
         }
     }
 }
