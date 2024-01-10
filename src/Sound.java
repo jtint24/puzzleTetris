@@ -1,8 +1,8 @@
 import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
@@ -12,22 +12,17 @@ public class Sound {
         // specify the sound to play
         // (assuming the sound can be played by the audio system)
         // from a wave File
-        try {
+        try (InputStream inStream = Sound.class.getClassLoader().getResourceAsStream(fileName+".wav")) {
 
             ClassLoader systemCL = Sound.class.getClassLoader();
             assert systemCL != null;
 
-            File file = new File(Sound.class.getResource(fileName+".wav").toURI());
+            InputStream bufferedIn = new BufferedInputStream(inStream);
 
-            if (file.exists()) {
-                AudioInputStream sound = AudioSystem.getAudioInputStream(file);
-                // load the sound into memory (a Clip)
-                clip = AudioSystem.getClip();
-                clip.open(sound);
-            }
-            else {
-                throw new RuntimeException("Sound: file not found: " + fileName);
-            }
+            AudioInputStream sound = AudioSystem.getAudioInputStream(bufferedIn);
+            // load the sound into memory (a Clip)
+            clip = AudioSystem.getClip();
+            clip.open(sound);
         }
         catch (MalformedURLException e) {
             e.printStackTrace();
@@ -44,9 +39,6 @@ public class Sound {
         catch (LineUnavailableException e) {
             e.printStackTrace();
             throw new RuntimeException("Sound: Line Unavailable Exception Error: " + e);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Sound: Unavailable File URI: "+e);
         }
 
         // play, stop, loop the sound clip
